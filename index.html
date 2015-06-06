@@ -18,7 +18,9 @@ $(function() {
         deck = shuffle(deck1.concat(deck1.concat(deck1.concat(deck1.concat(deck1.concat(deck1)))))),
         pickedCardIndexes = [],
         cards = {},
-        answered = false;
+        answered = false,
+        forcePairs = true,
+        forceSoft = true;
     
     function getDeck() {
         var ranks = '2 3 4 5 6 7 8 9 10 j q k a'.split(/ /),
@@ -102,7 +104,16 @@ $(function() {
         var value;
         while (typeof value == 'undefined' || value == 21) {
             cards.my1 = deck[getCardIndex()];
-            cards.my2 = deck[getCardIndex()];
+            if (forceSoft && forcePairs && Math.random() > 0.5)
+                cards.my2 = "sa";
+            else if (forceSoft && forcePairs)
+                cards.my2 = cards.my1;
+            else if (forceSoft)
+                cards.my2 = "sa";
+            else if (forcePairs)
+                cards.my2 = cards.my1;
+            else
+                cards.my2 = deck[getCardIndex()];
             value = getCardValue(cards.my1, true) + getCardValue(cards.my2, true);
         }
         $('#dealer-cards').html("<img src='images/" + cards.dealer + ".png'><img src='images/back.png'>");
